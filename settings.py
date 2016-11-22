@@ -8,8 +8,7 @@ credentials.
 
 # Get the OAuth credentials prior from the API, e.g.
 # https://apisandbox.openbankproject.com/consumer-registration
-CLIENT_KEY = ''
-CLIENT_SECRET = ''
+import api_credentials
 
 
 # URL you are redirected to when OAuth has succeeded. Doesn't need to exist for
