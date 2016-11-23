@@ -94,8 +94,6 @@ class ObpApi:
                 'PUT': requests.put,
                 'DELETE': requests.delete
             }
-            print('all_headers')
-            print(all_headers)
             response = methods[method](self.base_url + url, headers=all_headers)
         elif self.auth_method == 'oauth':
             methods = {
@@ -154,8 +152,7 @@ class ObpApi:
                               offset=None, from_date=None, to_date=None):
         """Retrieves transactions for given account in given bank"""
 
-        #url = '/my/banks/{bank}/accounts/{account}/transactions'.format(bank=bank, account=account)
-        url = '/banks/{bank}/accounts/{account}/owner/transactions'.format(bank=bank, account=account)
+        url = '/my/banks/{bank}/accounts/{account}/transactions'.format(bank=bank, account=account)
         headers = {}
         if sort_by is not None:
             headers['obp_sort_by'] = sort_by
