@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import requests
+from copy import copy
 
 
 class ObpApi:
@@ -75,17 +76,42 @@ class ObpApi:
         self._oauth = api
         self.auth_method = 'oauth'
 
-    def _request(self, url):
+    def _request(self, url, method='GET', headers=None):
         """Creates HTTP request to API endpoint."""
 
         assert self.auth_method is not None, 'Authentication not done yet.'
+
         if self.auth_method == 'direct':
-            response = requests.get(url, headers=self._direct_login)
-            return response
+            if headers is not None:
+                # Merge custom headers with direct login headers
+                all_headers = copy(self._direct_login)
+                all_headers.update(headers)
+            else:
+                all_headers = self._direct_login
+            methods = {
+                'GET': requests.get,
+                'POST': requests.post,
+                'PUT': requests.put,
+                'DELETE': requests.delete
+            }
+            print('all_headers')
+            print(all_headers)
+            response = methods[method](self.base_url + url, headers=all_headers)
         elif self.auth_method == 'oauth':
-            response = self._oauth.get(url)
-            return response
-        raise ValueError('Invalid auth method: {}'.format(self.auth_method))
+            methods = {
+                'GET': self._oauth.get,
+                'POST': self._oauth.post,
+                'PUT': self._oauth.put,
+                'DELETE': self._oauth.delete
+            }
+            if headers is not None:
+                response = methods[method](self.base_url + url, headers=headers)
+            else:
+                response = methods[method](self.base_url + url)
+        else:
+            raise ValueError('Invalid auth method: {}'.format(self.auth_method))
+
+        return response
 
     def hello(self, quiet=False):
         """Tests API endpoint."""
@@ -98,3 +124,51 @@ class ObpApi:
             return True
         else:
             return False
+
+    def get_all_private_accounts(self):
+        """Retrieves accounts from given banks"""
+
+        url = '/my/accounts'
+        response = self._request(url)
+        accounts = response.json()
+        return accounts
+
+    def get_account(self, bank, account, view):
+        """Retrieves info for an account redacted by a view"""
+
+        url = '/banks/{bank}/accounts/{account}/{view}/account'.format(
+            bank=bank, account=account, view=view)
+        response = self._request(url)
+        acc = response.json()
+        return acc
+
+    def get_views(self, bank, account):
+        """Retrieves views for given account in given bank"""
+
+        url = '/banks/{bank}/accounts/{account}/views'.format(bank=bank, account=account)
+        response = self._request(url)
+        views = response.json()['views']
+        return views
+
+    def get_transactions_core(self, bank, account, sort_by=None, sort_direction=None, limit=None,
+                              offset=None, from_date=None, to_date=None):
+        """Retrieves transactions for given account in given bank"""
+
+        #url = '/my/banks/{bank}/accounts/{account}/transactions'.format(bank=bank, account=account)
+        url = '/banks/{bank}/accounts/{account}/owner/transactions'.format(bank=bank, account=account)
+        headers = {}
+        if sort_by is not None:
+            headers['obp_sort_by'] = sort_by
+        if sort_direction is not None:
+            headers['obp_sort_direction'] = sort_direction
+        if limit is not None:
+            headers['obp_limit'] = str(limit)
+        if offset is not None:
+            headers['obp_offset'] = str(offset)
+        if from_date is not None:
+            headers['obp_from_date'] = from_date
+        if to_date is not None:
+            headers['obp_to_date'] = to_date
+        response = self._request(url, headers=headers)
+        transactions = response.json()['transactions']
+        return transactions
