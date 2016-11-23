@@ -16,7 +16,8 @@ http://pyoauth.readthedocs.org/en/latest/guides/oauth1.html
 from requests_oauthlib import OAuth1Session
 from six.moves import input
 
-from settings import CLIENT_KEY, CLIENT_SECRET, CALLBACK_URL, API_HOST
+from api_credentials import CLIENT_KEY, CLIENT_SECRET
+from settings import CALLBACK_URL, API_HOST
 
 
 OAUTH_BASE = '{}/oauth'.format(API_HOST)

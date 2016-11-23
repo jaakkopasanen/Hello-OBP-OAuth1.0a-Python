@@ -1,0 +1,177 @@
+TEST_USERS = [{
+    "email": "jaakko.fi.28@example.com",
+    "password": "88cf9a",
+    "user_name": "jaakko.fi.28@example.com"
+}, {
+    "email": "helmi.fi.28@example.com",
+    "password": "fb4b14",
+    "user_name": "helmi.fi.28@example.com"
+}, {
+    "email": "timo.fi.28@example.com",
+    "password": "ac0473",
+    "user_name": "timo.fi.28@example.com"
+}, {
+    "email": "katja.fi.28@example.com",
+    "password": "4d25dd",
+    "user_name": "katja.fi.28@example.com"
+}, {
+    "email": "robert.uk.29@example.com",
+    "password": "c24d33",
+    "user_name": "robert.uk.29@example.com"
+}, {
+    "email": "susan.uk.29@example.com",
+    "password": "d3930c",
+    "user_name": "susan.uk.29@example.com"
+}, {
+    "email": "anil.uk.29@example.com",
+    "password": "58315c",
+    "user_name": "anil.uk.29@example.com"
+}, {
+    "email": "ellie.uk.29@example.com",
+    "password": "6f185d",
+    "user_name": "ellie.uk.29@example.com"
+}, {
+    "email": "robin.fr.29@example.com",
+    "password": "cba2eb",
+    "user_name": "robin.fr.29@example.com"
+}, {
+    "email": "suzanne.fr.29@example.com",
+    "password": "7e523a",
+    "user_name": "suzanne.fr.29@example.com"
+}, {
+    "email": "nathan.fr.29@example.com",
+    "password": "393942",
+    "user_name": "nathan.fr.29@example.com"
+}, {
+    "email": "elise.fr.29@example.com",
+    "password": "5e3a89",
+    "user_name": "elise.fr.29@example.com"
+}, {
+    "email": "roberto.it.29@example.com",
+    "password": "5cf13f",
+    "user_name": "roberto.it.29@example.com"
+}, {
+    "email": "susanna.it.29@example.com",
+    "password": "600692",
+    "user_name": "susanna.it.29@example.com"
+}, {
+    "email": "alfio.it.29@example.com",
+    "password": "799703",
+    "user_name": "alfio.it.29@example.com"
+}, {
+    "email": "elisa.it.29@example.com",
+    "password": "a3fa23",
+    "user_name": "elisa.it.29@example.com"
+}, {
+    "email": "rob.us.29@example.com",
+    "password": "7624d5",
+    "user_name": "rob.us.29@example.com"
+}, {
+    "email": "sue.us.29@example.com",
+    "password": "0fa6dc",
+    "user_name": "sue.us.29@example.com"
+}, {
+    "email": "alf.us.29@example.com",
+    "password": "438e2e",
+    "user_name": "alf.us.29@example.com"
+}, {
+    "email": "emily.us.29@example.com",
+    "password": "e33de1",
+    "user_name": "emily.us.29@example.com"
+}, {
+    "email": "roby.tr.29@example.com",
+    "password": "bad1a6",
+    "user_name": "roby.tr.29@example.com"
+}, {
+    "email": "suzan.tr.29@example.com",
+    "password": "751989",
+    "user_name": "suzan.tr.29@example.com"
+}, {
+    "email": "asil.tr.29@example.com",
+    "password": "0e0d82",
+    "user_name": "asil.tr.29@example.com"
+}, {
+    "email": "ela.tr.29@example.com",
+    "password": "9ec073",
+    "user_name": "ela.tr.29@example.com"
+}, {
+    "email": "robert.be.29@example.com",
+    "password": "ab5835",
+    "user_name": "robert.be.29@example.com"
+}, {
+    "email": "susan.be.29@example.com",
+    "password": "18c5ac",
+    "user_name": "susan.be.29@example.com"
+}, {
+    "email": "anil.be.29@example.com",
+    "password": "45a051",
+    "user_name": "anil.be.29@example.com"
+}, {
+    "email": "ellie.be.29@example.com",
+    "password": "9478de",
+    "user_name": "ellie.be.29@example.com"
+}, {
+    "email": "robert.de.29@example.com",
+    "password": "f6e5eb",
+    "user_name": "robert.de.29@example.com"
+}, {
+    "email": "susan.de.29@example.com",
+    "password": "af1c02",
+    "user_name": "susan.de.29@example.com"
+}, {
+    "email": "anil.de.29@example.com",
+    "password": "5ce454",
+    "user_name": "anil.de.29@example.com"
+}, {
+    "email": "ellie.de.29@example.com",
+    "password": "456bd6",
+    "user_name": "ellie.de.29@example.com"
+}, {
+    "email": "jaakko.fi.29@example.com",
+    "password": "dcfa0b",
+    "user_name": "jaakko.fi.29@example.com"
+}, {
+    "email": "helmi.fi.29@example.com",
+    "password": "47ba00",
+    "user_name": "helmi.fi.29@example.com"
+}, {
+    "email": "timo.fi.29@example.com",
+    "password": "664be0",
+    "user_name": "timo.fi.29@example.com"
+}, {
+    "email": "katja.fi.29@example.com",
+    "password": "f4d35a",
+    "user_name": "katja.fi.29@example.com"
+}, {
+    "email": "robert.nl.29@example.com",
+    "password": "d11bbc",
+    "user_name": "robert.nl.29@example.com"
+}, {
+    "email": "susan.nl.29@example.com",
+    "password": "1b37e9",
+    "user_name": "susan.nl.29@example.com"
+}, {
+    "email": "anil.nl.29@example.com",
+    "password": "2ce743",
+    "user_name": "anil.nl.29@example.com"
+}, {
+    "email": "ellie.nl.29@example.com",
+    "password": "5bfa08",
+    "user_name": "ellie.nl.29@example.com"
+}, {
+    "email": "robert.at.29@example.com",
+    "password": "4b08f4",
+    "user_name": "robert.at.29@example.com"
+}, {
+    "email": "susan.at.29@example.com",
+    "password": "b2b891",
+    "user_name": "susan.at.29@example.com"
+}, {
+    "email": "anil.at.29@example.com",
+    "password": "def0cd",
+    "user_name": "anil.at.29@example.com"
+}, {
+    "email": "ellie.at.29@example.com",
+    "password": "d505d4",
+    "user_name": "ellie.at.29@example.com"
+}]
