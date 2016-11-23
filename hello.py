@@ -22,5 +22,5 @@ accounts = obp_api.get_all_private_accounts()
 #    account = obp_api.get_account(acc['bank_id'], acc['id'], 'owner')
 #    print('{currency} {amount} @ {iban}'.format(currency=account['balance']['currency'], amount=account['balance']['amount'], iban=account['IBAN']))
 
-transactions = obp_api.get_transactions_core(accounts[0]['bank_id'], accounts[0]['id'], limit=10)
+transactions = obp_api.get_transactions_core(accounts[0]['bank_id'], accounts[0]['id'], view='owner')
 pprint(transactions[0])

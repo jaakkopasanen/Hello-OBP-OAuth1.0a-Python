@@ -148,11 +148,17 @@ class ObpApi:
         views = response.json()['views']
         return views
 
-    def get_transactions_core(self, bank, account, sort_by=None, sort_direction=None, limit=None,
-                              offset=None, from_date=None, to_date=None):
+    def get_transactions_core(self, bank, account, view=None, sort_by=None, sort_direction=None,
+                              limit=None, offset=None, from_date=None, to_date=None):
         """Retrieves transactions for given account in given bank"""
 
-        url = '/my/banks/{bank}/accounts/{account}/transactions'.format(bank=bank, account=account)
+        if view is not None:
+            url = '/banks/{bank}/accounts/{account}/{view}/transactions'.format(
+                bank=bank, account=account, view=view)
+        else:
+            url = '/my/banks/{bank}/accounts/{account}/transactions'.format(
+                bank=bank, account=account)
+
         headers = {}
         if sort_by is not None:
             headers['obp_sort_by'] = sort_by
