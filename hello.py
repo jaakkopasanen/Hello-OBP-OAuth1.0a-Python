@@ -18,7 +18,9 @@ obp_api = ObpApi(
 login_success = obp_api.login_direct(user['username'], user['password'])
 # login_success = obp_api.initiate_oauth()
 
-accounts = obp_api.get_all_private_accounts()
+obp_api.hello()
+
+# accounts = obp_api.get_all_private_accounts()
 # for acc in accounts:
 #     account = obp_api.get_account(acc['bank_id'], acc['id'], 'owner')
 #     print('{currency} {amount} @ {iban}'.format(

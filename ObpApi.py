@@ -126,7 +126,7 @@ class ObpApi:
         """Tests API endpoint."""
 
         # HTTP GET with direct login authorization
-        res = self._request(self.base_url)
+        res = self._request('')
         if not quiet:
             print('API response {}'.format(res.status_code))  # Print response
         if res.status_code == 200:
