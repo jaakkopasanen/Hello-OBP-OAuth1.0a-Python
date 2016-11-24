@@ -20,7 +20,7 @@ login_success = obp_api.login_direct(user['username'], user['password'])
 
 obp_api.hello()
 
-# accounts = obp_api.get_all_private_accounts()
+accounts = obp_api.get_all_private_accounts()
 # for acc in accounts:
 #     account = obp_api.get_account(acc['bank_id'], acc['id'], 'owner')
 #     print('{currency} {amount} @ {iban}'.format(
@@ -29,8 +29,8 @@ obp_api.hello()
 #         iban=account['IBAN'])
 #     )
 #
-# transactions = obp_api.get_transactions(accounts[0]['bank_id'], accounts[0]['id'], view='owner')
-# pprint(transactions[0])
+transactions = obp_api.get_transactions(accounts[0]['bank_id'], accounts[0]['id'], view='owner')
+pprint(transactions[0])
 
 # consumer = obp_api.get_consumer('jaakkopasanen')
 # print(consumer)
