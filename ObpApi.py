@@ -36,12 +36,12 @@ class ObpApi:
         headers = {'Authorization': auth}
 
         # Do the login request
-        response = requests.get(self.direct_login_url, headers=headers)
+        res = requests.get(self.direct_login_url, headers=headers)
 
         # Handle response
-        if response.status_code == 200:
+        if res.status_code == 200:
             # Login success
-            token = response.json()['token']
+            token = res.json()['token']
             # Save authorization details
             self._direct_login = {'Authorization': 'DirectLogin token={token}'.format(token=token)}
             self.auth_method = 'direct'
@@ -94,7 +94,7 @@ class ObpApi:
                 'PUT': requests.put,
                 'DELETE': requests.delete
             }
-            response = methods[method](self.base_url + url, headers=all_headers)
+            res = methods[method](self.base_url + url, headers=all_headers)
         elif self.auth_method == 'oauth':
             methods = {
                 'GET': self._oauth.get,
@@ -103,61 +103,134 @@ class ObpApi:
                 'DELETE': self._oauth.delete
             }
             if headers is not None:
-                response = methods[method](self.base_url + url, headers=headers)
+                res = methods[method](self.base_url + url, headers=headers)
             else:
-                response = methods[method](self.base_url + url)
+                res = methods[method](self.base_url + url)
         else:
             raise ValueError('Invalid auth method: {}'.format(self.auth_method))
 
-        return response
+        return res
 
     def hello(self, quiet=False):
         """Tests API endpoint."""
 
         # HTTP GET with direct login authorization
-        response = self._request(self.base_url)
+        res = self._request(self.base_url)
         if not quiet:
-            print('API response {}'.format(response.status_code))  # Print response
-        if response.status_code == 200:
+            print('API response {}'.format(res.status_code))  # Print response
+        if res.status_code == 200:
             return True
         else:
             return False
 
+    # Banks
+    # ----------------------------------------------------------------------------------------------
+    def get_banks(self):
+        """Retrieves basic info for all the banks supported by the host server"""
+
+        res = self._request('/banks')
+        return res.json()['banks']
+
+    def get_bank(self, bank_id):
+        """Retrieves basic info about a bank"""
+        url = '/banks/{}'.format(bank_id)
+        res = self._request(url)
+        return res.json()
+
+    # Users
+    # ----------------------------------------------------------------------------------------------
+    def get_consumers(self):
+        """Retrieves all consumers
+
+        CanGetConsumers entitlement required
+        """
+
+        res = self._request('/management/consumers')
+        return res.json()
+
+    def get_consumer(self, consumer_id):
+        """Retrieves a consumer by consumer ID
+
+        CanGetConsumers entitlement required
+        """
+
+        url = '/management/consumers/{}'.format(consumer_id)
+        res = self._request(url)
+        return res.json()
+
+    def get_customers_for_current_user(self):
+        """Retrieves infos for all customer objects of current user"""
+
+        res = self._request('/users/current/customers')
+        return res.json()['customers']
+
+    def get_current_user(self):
+        """Retrieves info about current user"""
+
+        res = self._request('/users/current')
+        return res.json()
+
+    def get_users(self):
+        """Retrieves all users
+
+        CanGetAnyUser entitlement required
+        """
+
+        res = self._request('/users')
+        return res.json()
+
+    def get_entitlements(self, user_id, bank_id=None):
+        """Retrieves entitlements for user in a bank
+
+        CanGetEntitlementsForAnyUserAtOneBank or
+        CanGetEntitlementsForAnyUserAtAnyBank entitlements required
+        """
+
+        if bank_id is not None:
+            url = '/banks/{bank}/users/{user}/entitlements'.format(bank=bank_id, user=user_id)
+        else:
+            url = '/users/{}/entitlements'.format(user_id)
+        res = self._request(url)
+        return res.json()
+
+    # Accounts
+    # ----------------------------------------------------------------------------------------------
+    def get_account(self, bank_id, account_id, view):
+        """Retrieves info for a bank account redacted by a view"""
+
+        url = '/banks/{bank}/accounts/{account}/{view}/account_id'.format(
+            bank=bank_id, account=account_id, view=view)
+        res = self._request(url)
+        return res.json()
+
     def get_all_private_accounts(self):
-        """Retrieves accounts from given banks"""
+        """Retrieves all private accounts for current user"""
 
         url = '/my/accounts'
-        response = self._request(url)
-        accounts = response.json()
-        return accounts
+        res = self._request(url)
+        return res.json()
 
-    def get_account(self, bank, account, view):
-        """Retrieves info for an account redacted by a view"""
+    # Views
+    # ----------------------------------------------------------------------------------------------
+    def get_views(self, bank_id, account_id):
+        """Retrieves views for given account_id in given bank_id"""
 
-        url = '/banks/{bank}/accounts/{account}/{view}/account'.format(
-            bank=bank, account=account, view=view)
-        response = self._request(url)
-        acc = response.json()
-        return acc
+        url = '/banks/{bank}/accounts/{account}/views'.format(bank=bank_id, account=account_id)
+        res = self._request(url)
+        return res.json()['views']
 
-    def get_views(self, bank, account):
-        """Retrieves views for given account in given bank"""
-
-        url = '/banks/{bank}/accounts/{account}/views'.format(bank=bank, account=account)
-        response = self._request(url)
-        views = response.json()['views']
-        return views
-
-    def get_transactions_core(self, bank, account, view=None, sort_by=None, sort_direction=None,
-                              limit=None, offset=None, from_date=None, to_date=None):
-        """Retrieves transactions for given account in given bank"""
+    # Transactions
+    # ----------------------------------------------------------------------------------------------
+    def get_transactions(self, bank_id, account, view=None, sort_by=None, sort_direction=None,
+                         limit=None, offset=None, from_date=None, to_date=None):
+        """Retrieves transactions for given account in given bank_id"""
 
         if view is not None:
             url = '/banks/{bank}/accounts/{account}/{view}/transactions'.format(
-                bank=bank, account=account, view=view)
+                bank=bank_id, account=account, view=view)
         else:
             url = '/my/banks/{bank}/accounts/{account}/transactions'.format(
-                bank=bank, account=account)
+                bank=bank_id, account=account)
 
         headers = {}
         if sort_by is not None:
@@ -172,6 +245,5 @@ class ObpApi:
             headers['obp_from_date'] = from_date
         if to_date is not None:
             headers['obp_to_date'] = to_date
-        response = self._request(url, headers=headers)
-        transactions = response.json()['transactions']
-        return transactions
+        res = self._request(url, headers=headers)
+        return res.json()['transactions']
