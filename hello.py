@@ -15,8 +15,8 @@ obp_api = ObpApi(
     consumer_secret=OBP_CONSUMER_SECRET
 )
 
-obp_api.login_direct(user['username'], user['password'])
-# obp_api.initiate_oauth()
+login_success = obp_api.login_direct(user['username'], user['password'])
+# login_success = obp_api.initiate_oauth()
 
 accounts = obp_api.get_all_private_accounts()
 # for acc in accounts:
@@ -54,5 +54,5 @@ accounts = obp_api.get_all_private_accounts()
 # bank = obp_api.get_bank(accounts[0]['bank_id'])
 # print(bank)
 
-banks = obp_api.get_banks()
-pprint(banks[0])
+# banks = obp_api.get_banks()
+# pprint(banks[0])

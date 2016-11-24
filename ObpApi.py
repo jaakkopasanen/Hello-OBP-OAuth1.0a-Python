@@ -21,7 +21,7 @@ class ObpApi:
         self.consumer_secret = consumer_secret
 
         self.auth_method = None
-        self._direct_login = ''
+        self._direct_login = {}
         self._oauth = None
 
     def login_direct(self, username, password):
@@ -76,38 +76,49 @@ class ObpApi:
         self._oauth = api
         self.auth_method = 'oauth'
 
-    def _request(self, url, method='GET', headers=None):
+    def _request(self, url, method='GET', headers=None, json_data=None):
         """Creates HTTP request to API endpoint."""
 
-        assert self.auth_method is not None, 'Authentication not done yet.'
-
         if self.auth_method == 'direct':
+            # Add direct login authentication headers
             if headers is not None:
                 # Merge custom headers with direct login headers
                 all_headers = copy(self._direct_login)
                 all_headers.update(headers)
             else:
                 all_headers = self._direct_login
+            # HTTP method functions from requests module
             methods = {
                 'GET': requests.get,
                 'POST': requests.post,
                 'PUT': requests.put,
                 'DELETE': requests.delete
             }
-            res = methods[method](self.base_url + url, headers=all_headers)
         elif self.auth_method == 'oauth':
+            # Custom headers only
+            all_headers = headers
+            # HTTP method functions from oauth
             methods = {
                 'GET': self._oauth.get,
                 'POST': self._oauth.post,
                 'PUT': self._oauth.put,
                 'DELETE': self._oauth.delete
             }
-            if headers is not None:
-                res = methods[method](self.base_url + url, headers=headers)
-            else:
-                res = methods[method](self.base_url + url)
         else:
+            # Invalid authentication method
             raise ValueError('Invalid auth method: {}'.format(self.auth_method))
+
+        method = methods[method]
+        if all_headers:
+            if json_data:
+                res = method(self.base_url + url, headers=all_headers, json=json_data)
+            else:
+                res = method(self.base_url + url, headers=all_headers)
+        else:
+            if json_data:
+                res = method(self.base_url + url, json=json_data)
+            else:
+                res = method(self.base_url + url)
 
         return res
 
@@ -122,6 +133,12 @@ class ObpApi:
             return True
         else:
             return False
+
+    def import_data(self, data):
+        """Dumps users, accounts banks etc. into this sandbox environment"""
+
+        res = self._request('/sandbox/data-import', method='POST', json_data=data)
+        return res
 
     # Banks
     # ----------------------------------------------------------------------------------------------
