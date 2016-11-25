@@ -1,9 +1,11 @@
 from pprint import pprint
-from api_credentials import *
-from ObpApi import ObpApi
+
+from ObpApi.api_credentials import *
+
+from ObpApi.ObpApi import ObpApi
 from test_users import TEST_USERS
 
-user = TEST_USERS[0]
+user = TEST_USERS[10]
 
 obp_api = ObpApi(
     host='https://op.openbankproject.com',
@@ -18,7 +20,7 @@ obp_api = ObpApi(
 login_success = obp_api.login_direct(user['username'], user['password'])
 # login_success = obp_api.initiate_oauth()
 
-obp_api.hello()
+# obp_api.hello()
 
 accounts = obp_api.get_all_private_accounts()
 # for acc in accounts:

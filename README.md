@@ -1,45 +1,16 @@
 Python Example for OBP API
 ==========================
 
+All scripts should run with Python 3 .
+
 ## Setup
 
+Install requirements
 ```bash
-$ pip install -r requirements.txt
+sudo pip3 install -r requirements.txt
 ```
 
-All scripts should run with either Python 2 or 3 .
-
-### settings.py
-
-Edit settings.py to set your preferences like API_HOST, etc. The available settings are documented there.
-
-
-
-
-## Hello OBP
-
+Setup API credentials
 ```bash
-$ python hello_obp.py
-```
-
-
-
-
-## Hello Payments
-
-```bash
-$ python hello_payments_v1.4.py
-```
-
-The other payments script is kept for historical reasons, better don't use it.
-
-
-
-
-## Import Sandbox
-
-Edit the data to import in the script, then run:
-
-```bash
-$ python import_sandbox.py
+echo -e 'OBP_CONSUMER_KEY="<your_consumer_key>"\nOBP_CONSUMER_SECRET="<your_consumer_secret>"' >> ObpApi/api_credentials.py
 ```
