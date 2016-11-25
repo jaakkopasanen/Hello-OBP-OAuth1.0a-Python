@@ -215,7 +215,7 @@ class ObpApi:
     def get_account(self, bank_id, account_id, view):
         """Retrieves info for a bank account redacted by a view"""
 
-        url = '/banks/{bank}/accounts/{account}/{view}/account_id'.format(
+        url = '/banks/{bank}/accounts/{account}/{view}/account'.format(
             bank=bank_id, account=account_id, view=view)
         res = self._request(url)
         return res.json()

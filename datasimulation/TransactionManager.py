@@ -7,6 +7,12 @@ class TransactionManager:
         self.accounts = {}
         self.transactions = {}
 
+    def add_account(self, account):
+        """Adds an account without views_available"""
+        acc = copy(account)
+        del acc['views_available']
+        self.accounts[acc['id']] = acc
+
     def create_transaction(self, completed, description, transaction_type, amount, this_account_id, other_account_id):
         """Generates transaction as a dict as per ObpApi transaction
 
@@ -21,7 +27,7 @@ class TransactionManager:
         Returns:
             Generated transaction
         """
-        new_balance = self.accounts[this_account_id]['balance']['amount'] + amount
+        new_balance = str(float(self.accounts[this_account_id]['balance']['amount']) + float(amount))
         details = {
             'completed': completed,
             'description': description,
@@ -52,8 +58,8 @@ class TransactionManager:
         json_data = json.dumps({
             'accounts': self.accounts,
             'transactions': self.transactions
-        })
-        with open(path) as f:
+        }, indent=4)
+        with open(path, 'w+') as f:
             f.write(json_data)
 
     def load(self, path):
