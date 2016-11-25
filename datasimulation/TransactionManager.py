@@ -41,7 +41,7 @@ class TransactionManager:
                 'where': None
             },
             'this_account': copy(self.accounts[this_account_id]),
-            'other_account': copy(self.accounts[this_account_id])
+            'other_account': copy(self.accounts[other_account_id])
         }
         self.transactions[transaction['id']] = transaction  # Save transaction
         self.accounts[this_account_id]['balance']['amount'] = new_balance  # Update balance
