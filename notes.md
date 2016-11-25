@@ -3,7 +3,6 @@
 #### API
 - Custom headers not implemented for transaction reads?
 - No user password change / reset
-- Get bank for a user missing? (If user has not accounts)
 
 #### WebApp
 - Email login does not work: "Your account has not been validated. Please check your email for a validation link."
