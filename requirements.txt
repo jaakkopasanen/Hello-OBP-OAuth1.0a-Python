@@ -1,3 +1,4 @@
 requests-oauthlib==0.7.0
 six==1.10.0
 matplotlib==1.5.3
+seaborn==0.7.1

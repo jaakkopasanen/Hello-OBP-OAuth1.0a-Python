@@ -57,8 +57,8 @@ def get_random_weekday(n_days=1000, visualize=False):
 
 
 def simulate(n_persons=100,
-             start_time=datetime(year=2010, month=01, day=01),
-             end_time=datetime(year=2016, month=01, day=01)):
+             start_time=datetime(year=2010, month=1, day=1),
+             end_time=datetime(year=2016, month=1, day=1)):
     random_hours = get_random_hour_of_day(n_hours=n_persons)
     random_weekdays = get_random_weekday(n_days=n_persons)
 
