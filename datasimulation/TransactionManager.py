@@ -34,7 +34,7 @@ class TransactionManager:
             'new_balance': {'amount': new_balance, 'currency': 'EUR'},
             'posted': completed,
             'type': transaction_type,
-            'value': {'amount': amount, 'currency': 'EUR'}
+            'value': {'amount': str(amount), 'currency': 'EUR'}
         }
         transaction = {
             'details': details,
