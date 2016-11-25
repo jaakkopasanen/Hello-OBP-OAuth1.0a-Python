@@ -1,9 +1,10 @@
-import matplotlib
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 from datetime import datetime
 
+import matplotlib
+import matplotlib.dates as mdates
+import matplotlib.pyplot as plt
 from api_credentials import *
+
 from ObpApi import ObpApi
 from test_users import TEST_USERS
 

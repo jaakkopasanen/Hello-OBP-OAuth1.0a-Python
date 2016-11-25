@@ -4,5 +4,5 @@
 __pycache__/
 *.py[cod]
 
-api_credentials.py
+ObpApi/api_credentials.py
 
