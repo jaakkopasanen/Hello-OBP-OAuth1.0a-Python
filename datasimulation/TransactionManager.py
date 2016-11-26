@@ -5,13 +5,7 @@ from copy import copy
 class TransactionManager:
     def __init__(self):
         self.accounts = {}
-        self.transactions = {}
-
-    def add_account(self, account):
-        """Adds an account without views_available"""
-        acc = copy(account)
-        del acc['views_available']
-        self.accounts[acc['id']] = acc
+        self.n_transactions = 0;
 
     def create_transaction(self, completed, description, transaction_type, amount, this_account_id, other_account_id):
         """Generates transaction as a dict as per ObpApi transaction
@@ -27,44 +21,38 @@ class TransactionManager:
         Returns:
             Generated transaction
         """
-        new_balance = str(float(self.accounts[this_account_id]['balance']['amount']) + float(amount))
+        if type(completed) == str:
+            d = completed
+        else:
+            d = completed.strftime('%Y-%m-%dT%H:%M:%SZ')
         details = {
-            'completed': completed,
+            'completed': d,
             'description': description,
-            'new_balance': {'amount': new_balance, 'currency': 'EUR'},
-            'posted': completed,
-            'type': transaction_type,
+            'posted': d,
+            'type': str(transaction_type),
             'value': {'amount': str(amount), 'currency': 'EUR'}
         }
         transaction = {
             'details': details,
-            'id': 'ea3c6ee0-0147-48c9-b6e2-{}'.format(str(len(self.transactions)).zfill(11)),
-            'metadata': {
-                'comments': [],
-                'images': [],
-                'narrative': None,
-                'tags': [],
-                'where': None
-            },
-            'this_account': copy(self.accounts[this_account_id]),
-            'other_account': copy(self.accounts[other_account_id])
+            'id': 'ea3c6ee0-0147-48c9-b6e2-{}'.format(str(self.n_transactions).zfill(11)),
+            'account': {'id': str(this_account_id)},
+            'counterparty': {'id': str(other_account_id)}
         }
-        self.transactions[transaction['id']] = transaction  # Save transaction
-        self.accounts[this_account_id]['balance']['amount'] = new_balance  # Update balance
+        if this_account_id in self.accounts:
+            self.accounts[this_account_id].append(transaction)
+        else:
+            self.accounts[this_account_id] = [transaction]
+        self.n_transactions += 1
         return transaction
 
     def save(self, path):
-        """Writes transactions and accounts to a JSON file"""
-        json_data = json.dumps({
-            'accounts': self.accounts,
-            'transactions': self.transactions
-        }, indent=4)
+        """Writes transactions to a JSON file"""
+        json_data = json.dumps(self.accounts, indent=4)
         with open(path, 'w+') as f:
             f.write(json_data)
 
     def load(self, path):
-        """Loads transactions and accounts from a JSON file"""
+        """Loads transactions from a JSON file"""
         with open(path) as f:
             data = json.loads(f.read())
-            self.transactions = data['transactions']
             self.accounts = data['accounts']

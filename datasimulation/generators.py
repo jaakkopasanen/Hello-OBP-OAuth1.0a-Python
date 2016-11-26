@@ -4,8 +4,14 @@ import numpy as np
 from dateutil.relativedelta import relativedelta
 import datetime
 from TransactionManager import TransactionManager
+from datetime_utils import time_spread
+import random
+import json
 
-enable_debugging = True
+enable_debugging = False
+
+tm = TransactionManager()
+
 
 def debug(message):
     if enable_debugging:
@@ -21,10 +27,8 @@ def add_months_to_datetime(source_date, months):
                              second=source_date.second)
 
 
-def monthly_transactions(first_transaction_time, end_of_occurrences,
-                         description, transaction_type, amount,
-                         this_account_id,
-                         other_account_id):
+def create_monthly_transactions(first_transaction_time, end_of_occurrences, description, transaction_type, amount,
+                                this_account_id, other_account_id):
     """ Generates monthly transactions
 
     Creates transaction timestamps by incrementing first_transaction_time
@@ -41,21 +45,61 @@ def monthly_transactions(first_transaction_time, end_of_occurrences,
     current_time = first_transaction_time
     while current_time < end_of_occurrences:
         current_time = add_months_to_datetime(current_time, 1)
+        current_time = time_spread(current_time, 1, -2, 2)
         debug("Monthly occurrence time: {}".format(current_time))
-        # manager.create_transaction(monthly_occurrence_time,
-        #                                       description,
-        #                                       transaction_type,
-        #                                       amount,
-        #                                       this_account_id,
-        #                                       other_account_id)
+        tm.create_transaction(current_time, description, transaction_type, amount, this_account_id, other_account_id)
+
+
+def create_daily_transaction(prob, day, hour, minute, hour_spread, description, amount, this_account_id, other_account_id):
+    if random.random() < 1 - prob:
+        debug('Skipped {}'.format(description))
+        return 0
+    completed = day.replace(hour=hour, minute=minute)
+    completed = time_spread(completed, hour_spread)
+    am = amount * (0.9 + 0.2*random.random())  # TODO
+    tm.create_transaction(completed, description, '10218', am, this_account_id, other_account_id)
+    debug('{desc} created for {amount}'.format(desc=description, amount=amount))
+    return amount
+
+
+def create_transactions(params):
+    # Parse start time and end time
+    start_time = datetime.datetime.strptime(params['start_time'], '%Y-%m-%dT%H:%M:%SZ')
+    end_time = datetime.datetime.strptime(params['end_time'], '%Y-%m-%dT%H:%M:%SZ')
+    # Generate monthly transactions
+    for mt in params['monthly_transactions']:  # Create all monthly transactions
+        t_parts = mt['time'].split(':')  # Split time
+        t = start_time.replace(day=mt['day'], hour=int(t_parts[0]), minute=int(t_parts[1]))  # Set time
+        create_monthly_transactions(t, end_time, description=mt['description'], transaction_type='2',
+                                    amount=mt['amount'], this_account_id=params['this_account'],
+                                    other_account_id=mt['other_account'])
+
+    # Generate daily transactions
+    d = start_time
+    day_spending = 0
+    month_spending = 0
+    while d < end_time:
+        day_spending = 0  # Reset day spending
+        if d.day == 1:
+            print('Spent {} € last month'.format(month_spending))
+            month_spending = 0  # Reset month spending at the beginning of month
+        for dt in params['daily_transactions']:  # Create all daily transactions
+            t_parts = dt['time'].split(':')  # Split time
+            amount = create_daily_transaction(dt['prob'], d, int(t_parts[0]), int(t_parts[1]), dt['hour_spread'],
+                                              dt['description'], dt['amount'], params['this_account'],
+                                              random.choice(dt['other_accounts']))
+            day_spending += amount  # Increase day spending
+        # next day
+        month_spending += day_spending  # Add day spending total to month spending
+        d = d + relativedelta(days=1)  # Next day
 
 
 if __name__ == '__main__':
-    # generate monthly payments of 500€ over two year period
-    now = datetime.datetime.now()
-    year_from_now = now - relativedelta(years=-1)
-    year_ago = now - relativedelta(years=1)
-    monthly_transactions(now, year_from_now, description="desc",
-                         transaction_type=1, amount=-500,
-                         this_account_id=10101,
-                         other_account_id=101)
+
+    with open('./simulated_users.json') as f:
+        users = json.loads(f.read())
+
+    for user in users:
+        create_transactions(user)
+
+    tm.save('./tm.json')
