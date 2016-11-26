@@ -59,6 +59,7 @@ def get_transaction_amount(transaction):
 
 
 def get_transaction_description(transaction):
+    print("Getting transaction description...")
     descr = transaction['details']['description']
     if descr and descr is not None:
         return descr
@@ -67,7 +68,7 @@ def get_transaction_description(transaction):
 
 
 def user_transactions_to_data_matrix(user_transactions):
-    print("Concerting user transactions to data matrix...")
+    print("Converting user transactions to data matrix...")
     df_all = pd.DataFrame()
     for transaction in user_transactions:
         row_transaction = pd.DataFrame({
@@ -84,7 +85,7 @@ def user_transactions_to_data_matrix(user_transactions):
 
 
 def pre_process(df):
-    print("Applying pre processing...")
+    print("Applying pre-processing...")
     # Fill empty strings with NaNs
     df = df.replace('', pd.np.nan, regex=True)
     # Fill white space strings with NaNs
@@ -174,6 +175,7 @@ def visualize_pca(df, labels=None, file_name_identifier=None):
 
 
 def cluster_transactions(user_transactions):
+    print("Getting ready to cluster transactions...")
     # Prepare data
     data_matrix = user_transactions_to_data_matrix(user_transactions)
     data_matrix, factorized_vals = factorize_string_cols(data_matrix)
