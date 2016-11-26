@@ -32,3 +32,11 @@ def predict(path_to_user_data):
 
 if __name__ == '__main__':
     clusters, labels, unique_labels = predict('./datasimulation/tm.json')
+    # TODO: budget
+    budget = 2000
+    # TODO: merge clusters with same label
+    # TODO: dict with thresholds (% of monthly budget) for all labels
+    threshold = {
+        'dinner': budget * 0.1
+    }
+    # TODO: trigger hints for all lables where sum exceeds threshold
