@@ -14,7 +14,8 @@ from sklearn.preprocessing import StandardScaler
 from ObpApi.ObpApi import ObpApi
 from ObpApi.api_credentials import *
 from test_users import TEST_USERS
-from classification.features import get_transaction_weekday
+from classification.features import (
+    get_transaction_weekday, get_transaction_hour, get_transaction_month)
 from datasimulation.TransactionManager import TransactionManager
 
 DEFAULT_VAL_TO_REPLACE_MISSING = -9999.0
@@ -74,6 +75,8 @@ def user_transactions_to_data_matrix(user_transactions):
             'description': get_transaction_description(transaction),
             'counterparty_id': transaction['counterparty']['id'],
             'weekday': get_transaction_weekday(transaction),
+            'hour': get_transaction_hour(transaction),
+            'month': get_transaction_month(transaction),
             'type': str(transaction['details']['type'])
         }, index=[transaction['account']['id']])
         df_all = df_all.append([row_transaction], ignore_index=False)
