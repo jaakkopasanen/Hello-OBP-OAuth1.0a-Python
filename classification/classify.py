@@ -43,26 +43,25 @@ def get_test_data():
 
 def train(X_train, Y_train):
     """Train model"""
+
+    print(X_train.shape)
+    print(Y_train.shape)
     model = Sequential()
     # Stacking layers is as easy as .add():
 
     model.add(Dense(output_dim=64, input_dim=X_train.shape[1]))
     model.add(Activation("relu"))
-    model.add(Dense(output_dim=2))
+    model.add(Dense(output_dim=Y_train.shape[1]))
     model.add(Activation("softmax"))
 
     # Once your model looks good, configure its learning process with .compile():
     model.compile(loss='categorical_crossentropy', optimizer='sgd',
                   metrics=['accuracy'])
 
-    # If you need to, you can further configure your optimizer. A core principle of Keras is to make things reasonably simple, while allowing the user to be fully in control when they need to (the ultimate control being the easy extensibility of the source code).
-    model.compile(loss='categorical_crossentropy',
-                  optimizer=SGD(lr=0.01, momentum=0.9, nesterov=True))
-
     # You can now iterate on your training data in batches:
-    model.fit(X_train, Y_train, nb_epoch=5, batch_size=32)
+    model.fit(X_train, Y_train, nb_epoch=1000, batch_size=17)
 
-    return model
+    model.save("model.h5")
 
 
 def test(model, X_test, Y_test):
