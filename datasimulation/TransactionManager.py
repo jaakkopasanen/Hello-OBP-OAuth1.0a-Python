@@ -51,7 +51,7 @@ class TransactionManager:
         with open(path, 'w+') as f:
             f.write(json_data)
 
-    def load(self, path):
+    def load(self, p):
         """Loads transactions from a JSON file"""
-        with open(path) as f:
+        with open(p) as f:
             self.accounts = json.loads(f.read())
