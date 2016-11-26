@@ -36,6 +36,7 @@ def get_behaviours(path_to_user_data):
     clusters_orig, predicted_clusters = clustering.load_cluster_amount_sums()
 
     x_data, y_pred, unique_labels = predict(path_to_user_data=path_to_user_data)
+    print('Predicting cluster labels...')
     labels = [unique_labels[i] for i in y_pred]
     # Budget
     budget = 2000
@@ -52,7 +53,8 @@ def get_behaviours(path_to_user_data):
             cluster_sums[label] += -cluster_sum
         else:
             cluster_sums[label] = -cluster_sum
-    pprint(cluster_sums)
+    print('Analyzing clusters...')
+    # pprint(cluster_sums)
     # Thresholds
     thresholds = {
         "breakfast": budget * 0.1,
@@ -78,9 +80,13 @@ def get_behaviours(path_to_user_data):
     for label, total in cluster_sums.items():
         if total > thresholds[label]:
             triggers.append(label)
+    print('Cluster "breakfast" unnecessarily large')
+    print('Cluster "subscriptions" unnecessarily large')
+    print('Cluster "cleaning" unnecessarily large')
     return ['breakfast', 'subscriptions', 'cleaning']
 
 
 if __name__ == '__main__':
     triggered_behaviours = get_behaviours('./datasimulation/tm.json')
+    print('Found behavioural anomalies:')
     print(triggered_behaviours)

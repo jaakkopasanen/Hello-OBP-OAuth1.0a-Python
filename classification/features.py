@@ -2,17 +2,17 @@ import numpy as np
 import dateutil.parser
 
 def get_transaction_weekday(transaction):
-    print("Extracting weekday of transaction...")
+    # print("Extracting weekday of transaction...")
     date_string = transaction['details']['posted']
     return dateutil.parser.parse(date_string).weekday()
 
 def get_transaction_month(transaction):
-    print("Extracting month of transaction...")
+    # print("Extracting month of transaction...")
     date_string = transaction['details']['posted']
     return dateutil.parser.parse(date_string).month
 
 def get_transaction_hour(transaction):
-    print("Extracting hour of transaction...")
+    # print("Extracting hour of transaction...")
     date_string = transaction['details']['posted']
     return dateutil.parser.parse(date_string).hour
 
@@ -28,7 +28,7 @@ def get_is_transaction_weekend(transaction):
 
 
 def create_cluster_features(transactions):
-    print("Extracting features from cluster...")
+    # print("Extracting features from cluster...")
     """
     Compute cluster features
     amount mean, amount std, hour average, hour std, month average,
@@ -41,36 +41,36 @@ def create_cluster_features(transactions):
     values = np.array([float(t['details']['value']['amount']) for t in transactions])
     mean = values.mean()
     std = values.std()
-    print("Calculating mean of transaction amounts in cluster...")
+    # print("Calculating mean of transaction amounts in cluster...")
     feats.append(mean)
-    print("Calculating standard deviation of transaction amounts in cluster...")
+    # print("Calculating standard deviation of transaction amounts in cluster...")
     feats.append(std)
 
     # hour statistics
     hour_data = np.array([get_transaction_hour(t) for t in transactions])
     hour_average = hour_data.mean()
     hour_std = hour_data.std()
-    print("Calculating average hour of transactions in cluster...")
+    # print("Calculating average hour of transactions in cluster...")
     feats.append(hour_average)
-    print("Calculating standard deviation of hour of transactions in cluster...")
+    # print("Calculating standard deviation of hour of transactions in cluster...")
     feats.append(hour_std)
 
     # month statistics
     month_data = np.array([get_transaction_month(t) for t in transactions])
     month_average = month_data.mean()
     month_std = month_data.std()
-    print("Calculating average month of transactions in cluster...")
+    # print("Calculating average month of transactions in cluster...")
     feats.append(month_average)
-    print("Calculating standard deviation of transaction month in cluster...")
+    # print("Calculating standard deviation of transaction month in cluster...")
     feats.append(month_std)
 
     # day statistics
     day_data = np.array([get_transaction_weekday(t) for t in transactions])
     day_average = day_data.mean()
     day_std = day_data.std()
-    print("Calculating average transactions day in cluster...")
+    # print("Calculating average transactions day in cluster...")
     feats.append(day_average)
-    print("Calculating standard deviation of transaction day in cluster...")
+    # print("Calculating standard deviation of transaction day in cluster...")
     feats.append(day_std)
 
     # percentage of weekdays and weekend days
@@ -78,9 +78,9 @@ def create_cluster_features(transactions):
     weekdays = day_data <= 4
     weekends_ratio = weekends.sum() / weekends.shape[0]
     weekdays_ratio = weekdays.sum() / weekdays.shape[0]
-    print("Calculating weekday/weekend ratio...")
+    # print("Calculating weekday/weekend ratio...")
     feats.append(weekdays_ratio)
-    print("Calculating weekends/weekday ratio...")
+    # print("Calculating weekends/weekday ratio...")
     feats.append(weekends_ratio)
 
     n_descriptions = {}

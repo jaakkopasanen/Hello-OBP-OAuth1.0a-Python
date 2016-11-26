@@ -62,7 +62,7 @@ def get_transaction_amount(transaction):
 
 
 def get_transaction_description(transaction):
-    print("Getting transaction description...")
+    # print("Getting transaction description...")
     descr = transaction['details']['description']
     if descr and descr is not None:
         return descr
