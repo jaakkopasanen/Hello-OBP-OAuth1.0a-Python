@@ -3,8 +3,8 @@ import calendar
 import numpy as np
 from dateutil.relativedelta import relativedelta
 import datetime
-from TransactionManager import TransactionManager
-from datetime_utils import time_spread
+from datasimulation.TransactionManager import TransactionManager
+from datasimulation.datetime_utils import time_spread
 import random
 import json
 

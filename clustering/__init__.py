@@ -1,4 +1,5 @@
 import os
+import json
 from pprint import pprint
 from collections import OrderedDict
 
@@ -14,7 +15,7 @@ from ObpApi.ObpApi import ObpApi
 from ObpApi.api_credentials import *
 from test_users import TEST_USERS
 from classification.features import get_transaction_weekday
-
+from datasimulation.TransactionManager import TransactionManager
 
 DEFAULT_VAL_TO_REPLACE_MISSING = -9999.0
 
@@ -193,12 +194,18 @@ def cluster_transactions(user_transactions):
 
 
 if __name__ == '__main__':
-    obp_api = get_api()
-    users_transactions = get_all_transaction_data(users=TEST_USERS,
-                                                  obp_api=obp_api)
-    cluster_transactions(user_transactions=users_transactions[0])
 
-    for i, user_transactions in enumerate(users_transactions, start=1):
-        print("\nProcessing account %s / %s" % (i, len(users_transactions)))
-        cluster_transactions(user_transactions)
+    # The following fetches all the transactions from OP DB and cluster them
+    # obp_api = get_api()
+    # users_transactions = get_all_transaction_data(users=TEST_USERS,
+    #                                               obp_api=obp_api)
+    # for i, user_transactions in enumerate(users_transactions, start=1):
+    #     print("\nProcessing account %s / %s" % (i, len(users_transactions)))
+    #     cluster_transactions(user_transactions)
 
+    # The following loads data generated with the datasimulation module
+    # and clusters it
+    tm = TransactionManager()
+    tm.load('/Users/tuomastikkanen/Documents/my_dev/Ultrahack16-UltimateAI/tm.json')
+    user_transactions = tm.accounts['1']
+    cluster_transactions(user_transactions=user_transactions)
