@@ -45,21 +45,24 @@ def get_test_data():
 def save_model(_model):
     json_string = _model.to_json()
     date_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-    open('model_architecture.json', 'w').write(
-        json_string)
+    print("Saving architecture of neural network to hard drive...")
+    open('model_architecture.json', 'w').write(json_string)
+    print("Saving learned weights of neural network to hard drive...")
     _model.save_weights('model_weights.h5')
 
 
 def load_model(path_to_architecture, path_to_weights, optimizer):
+    print("Loading neural network architecture from hard drive...")
     _model = model_from_json(open(path_to_architecture).read())
+    print("Loading learned weights of neural network from hard drive...")
     _model.load_weights(path_to_weights)
     print("Compiling the neural network...")
-    _model.compile(loss='categorical_crossentropy',
-                  optimizer=optimizer)
+    _model.compile(loss='categorical_crossentropy', optimizer=optimizer)
     return _model
 
 
 def train(X_train, Y_train):
+    print("Getting ready to train neural network...")
     """Train model"""
 
     model = Sequential()
@@ -71,10 +74,12 @@ def train(X_train, Y_train):
     model.add(Activation("softmax"))
 
     # Once your model looks good, configure its learning process with .compile():
+    print("Compiling neural network...")
     model.compile(loss='categorical_crossentropy', optimizer='sgd',
                   metrics=['accuracy'])
 
     # You can now iterate on your training data in batches:
+    print("Training neural network...")
     model.fit(X_train, Y_train, nb_epoch=1000, batch_size=17)
 
     save_model(model)
