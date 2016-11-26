@@ -25,6 +25,6 @@
     {"description": "travel", "amount": -1000, "prob": 0.003, "time": "21:30", "hour_spread": 0.2, "other_accounts": ["44"]},
     {"description": "gasoline", "amount": -9, "prob": 0, "time": "11:20", "hour_spread": 0.2, "other_accounts": ["25"]},
     {"description": "bar", "amount": -9, "prob": 0.14, "time": "23:30", "hour_spread": 0.8, "other_accounts": ["45"]},
-    {"description": "loan", "amount": 1000, "prob": 0.8, "time": "11:20", "hour_spread": 0.2, "other_accounts": ["27", "28", "29"]}
+    {"description": "loan", "amount": 1000, "prob": 0, "time": "11:20", "hour_spread": 0.2, "other_accounts": ["27", "28", "29"]}
   ]
 }]
