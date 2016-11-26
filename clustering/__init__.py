@@ -229,8 +229,10 @@ if __name__ == '__main__':
     # The following loads data generated with the datasimulation module
     # and clusters it
     tm = TransactionManager()
-    tm.load('/Users/tuomastikkanen/Documents/my_dev/Ultrahack16-UltimateAI/tm.json')
+    tm.load(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../datasimulation/tm.json'))
     user_transactions = tm.accounts['1']
     clusters, factorized_vals = cluster_transactions(user_transactions)
     # Save first cluster to file
-    clusters[0].to_csv('cluster.csv', index=False)
+    # clusters[0].to_csv('cluster.csv', index=False)
+    for ind, cluster in enumerate(clusters):
+        cluster.to_csv('cluster{}.csv'.format(ind), index=False)
