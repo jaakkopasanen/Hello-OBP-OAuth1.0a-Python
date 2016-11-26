@@ -193,20 +193,24 @@ def cluster_transactions(user_transactions):
         return None, None
     else:
         print("%s: Clustering successful - found %s clusters" %
-              (account_id, len(np.unique(predicted_clusters))))
+              (account_id, len(
+                  [j for i, j in enumerate(np.unique(predicted_clusters))
+                   if j != -1])))
         # visualize_pca(data_matrix, labels=y_pred,
         #               file_name_identifier=account_id)
         clusters = []
         # Extract individual clusters (subsets of rows in data_frame)
         for uniq_cluster_label in np.unique(predicted_clusters):
+            if uniq_cluster_label == -1:
+                # Skip cluster representing noisy transactions
+                continue
             print("  * Number of transactions in cluster %s: %s" % (
                 uniq_cluster_label, len([ix for ix, label in
                                  enumerate(predicted_clusters) if
-                                 label == uniq_cluster_label and
-                                 label != -1])))
+                                 label == uniq_cluster_label])))
             cluster = data_matrix.iloc[
                 [i for i, label in enumerate(predicted_clusters) if
-                 label == uniq_cluster_label and label != -1]]
+                 label == uniq_cluster_label]]
             #cluster.to_csv('cluster%s.csv' % uniq_cluster_label)
             clusters.append(cluster)
         return clusters, factorized_vals
@@ -228,3 +232,5 @@ if __name__ == '__main__':
     tm.load('/Users/tuomastikkanen/Documents/my_dev/Ultrahack16-UltimateAI/tm.json')
     user_transactions = tm.accounts['1']
     clusters, factorized_vals = cluster_transactions(user_transactions)
+    # Save first cluster to file
+    clusters[0].to_csv('cluster.csv', index=False)
