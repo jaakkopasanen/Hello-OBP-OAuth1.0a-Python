@@ -8,7 +8,7 @@ from datetime_utils import time_spread
 import random
 import json
 
-enable_debugging = True
+enable_debugging = False
 
 tm = TransactionManager()
 
@@ -50,14 +50,14 @@ def create_monthly_transactions(first_transaction_time, end_of_occurrences, desc
         tm.create_transaction(current_time, description, transaction_type, amount, this_account_id, other_account_id)
 
 
-def create_daily_transaction(prob, day, hour, minute, hour_spread, description, this_account_id, other_account_id):
+def create_daily_transaction(prob, day, hour, minute, hour_spread, description, amount, this_account_id, other_account_id):
     if random.random() < 1 - prob:
         debug('Skipped {}'.format(description))
         return 0
     completed = day.replace(hour=hour, minute=minute)
     completed = time_spread(completed, hour_spread)
-    amount = 8 + random.random() * 2  # TODO
-    tm.create_transaction(completed, description, '10218', amount, this_account_id, other_account_id)
+    am = amount * (0.9 + 0.2*random.random())  # TODO
+    tm.create_transaction(completed, description, '10218', am, this_account_id, other_account_id)
     debug('{desc} created for {amount}'.format(desc=description, amount=amount))
     return amount
 
@@ -81,11 +81,12 @@ def create_transactions(params):
     while d < end_time:
         day_spending = 0  # Reset day spending
         if d.day == 1:
+            print('Spent {} € last month'.format(month_spending))
             month_spending = 0  # Reset month spending at the beginning of month
         for dt in params['daily_transactions']:  # Create all daily transactions
             t_parts = dt['time'].split(':')  # Split time
             amount = create_daily_transaction(dt['prob'], d, int(t_parts[0]), int(t_parts[1]), dt['hour_spread'],
-                                              dt['description'], params['this_account'],
+                                              dt['description'], dt['amount'], params['this_account'],
                                               random.choice(dt['other_accounts']))
             day_spending += amount  # Increase day spending
         # next day

@@ -10,7 +10,21 @@
     {"description": "internet", "day": 27, "time": "20:01", "amount": -15, "other_account": "24"}
   ],
   "daily_transactions": [
-    {"description": "breakfast", "prob": 0.1, "time": "09:00", "hour_spread": 0.2, "other_accounts": ["25", "26"]},
-    {"description": "lunch", "prob": 0.8, "time": "11:20", "hour_spread": 0.2, "other_accounts": ["27", "28", "29"]}
+    {"description": "breakfast", "amount": -5, "prob": 0.2, "time": "09:00", "hour_spread": 0.2, "other_accounts": ["25", "26"]},
+    {"description": "lunch", "amount": -9, "prob": 0.8, "time": "11:20", "hour_spread": 0.25, "other_accounts": ["27", "28", "29"]},
+    {"description": "dinner", "amount": -15, "prob": 0.05, "time": "17:30", "hour_spread": 0.7, "other_accounts": ["29", "30"]},
+    {"description": "groceries", "amount": -20, "prob": 0.5, "time": "19:15", "hour_spread": 1, "other_accounts": ["31", "32"]},
+    {"description": "snacks", "amount": -3.5, "prob": 0.9, "time": "15:00", "hour_spread": 2, "other_accounts": ["33"]},
+    {"description": "clothes", "amount": -89, "prob": 0.02, "time": "15:00", "hour_spread": 2, "other_accounts": ["34", "35", "36", "37"]},
+    {"description": "electronics", "amount": -300, "prob": 0.003, "time": "18:30", "hour_spread": 1, "other_accounts": ["38"]},
+    {"description": "medication", "amount": -17, "prob": 0.008, "time": "10:00", "hour_spread": 0.5, "other_accounts": ["39"]},
+    {"description": "culture", "amount": -12, "prob": 0.02, "time": "20:00", "hour_spread": 0.4, "other_accounts": ["40"]},
+    {"description": "culture", "amount": -5, "prob": 0.01, "time": "20:00", "hour_spread": 0.4, "other_accounts": ["41"]},
+    {"description": "sports", "amount": -28, "prob": 0.01, "time": "18:47", "hour_spread": 0.1, "other_accounts": ["42"]},
+    {"description": "train", "amount": -9, "prob": 0.01, "time": "07:15", "hour_spread": 0.01, "other_accounts": ["43"]},
+    {"description": "travel", "amount": -1000, "prob": 0.003, "time": "21:30", "hour_spread": 0.2, "other_accounts": ["44"]},
+    {"description": "gasoline", "amount": -9, "prob": 0, "time": "11:20", "hour_spread": 0.2, "other_accounts": ["25"]},
+    {"description": "bar", "amount": -9, "prob": 0.14, "time": "23:30", "hour_spread": 0.8, "other_accounts": ["45"]},
+    {"description": "loan", "amount": 1000, "prob": 0.8, "time": "11:20", "hour_spread": 0.2, "other_accounts": ["27", "28", "29"]}
   ]
 }]
