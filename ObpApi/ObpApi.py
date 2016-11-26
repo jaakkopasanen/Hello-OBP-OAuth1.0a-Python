@@ -227,6 +227,13 @@ class ObpApi:
         res = self._request(url)
         return res.json()
 
+    def get_accounts_at_all_banks(self):
+        """Retrieves all accounts at all banks
+        (Authenticated + Anonymous access) """
+        url = '/accounts'
+        res = self._request(url)
+        return res.json()
+
     # Views
     # ----------------------------------------------------------------------------------------------
     def get_views(self, bank_id, account_id):
@@ -263,4 +270,7 @@ class ObpApi:
         if to_date is not None:
             headers['obp_to_date'] = to_date
         res = self._request(url, headers=headers)
-        return res.json()['transactions']
+        if 'transactions' in res.json():
+            return res.json()['transactions']
+        else:
+            return []
