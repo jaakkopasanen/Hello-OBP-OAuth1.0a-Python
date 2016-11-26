@@ -75,25 +75,24 @@ def create_transactions(params):
                                     amount=mt['amount'], this_account_id=params['this_account'],
                                     other_account_id=mt['other_account'])
         static_spendings += mt['amount']
-    print('Static spendings are {} €'.format(static_spendings))
+    print('Static balance is {:0.2f} €'.format(static_spendings))
 
     # Generate daily transactions
     d = start_time
-    day_spending = 0
     month_spending = 0
     while d < end_time:
 
         # print('Spent {} € yesterday'.format(day_spending))
         day_spending = 0  # Reset day spending
         if d.day == 1:
-            print('Spent {} € last month'.format(month_spending + static_spendings))
+            print('Balance is {:0.2f} € for last month'.format(month_spending + static_spendings))
             month_spending = 0  # Reset month spending at the beginning of month
 
         for dt in params['daily_transactions']:  # Create all daily transactions
             t_parts = dt['time'].split(':')  # Split time
-            amount = create_daily_transaction(dt['prob'], d, int(t_parts[0]), int(t_parts[1]), dt['hour_spread'],
-                                              dt['description'], dt['amount'], params['this_account'],
-                                              random.choice(dt['other_accounts']))
+            amount = create_daily_transaction(dt['prob']*params['prob_k'], d, int(t_parts[0]), int(t_parts[1]),
+                                              dt['hour_spread'], dt['description'], dt['amount'],
+                                              params['this_account'], random.choice(dt['other_accounts']))
             day_spending += amount  # Increase day spending
 
         # next day

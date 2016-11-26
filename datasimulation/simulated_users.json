@@ -3,6 +3,7 @@
   "start_time": "2015-11-01T16:55:00Z",
   "end_time": "2016-11-02T16:55:00Z",
   "this_account": "1",
+  "prob_k": 1.5,
   "monthly_transactions": [
     {"description": "salary", "day": 15, "time": "10:00", "amount": 2000, "other_account": "21"},
     {"description": "rent", "day": 2, "time": "18:14", "amount": -500, "other_account": "22"},
