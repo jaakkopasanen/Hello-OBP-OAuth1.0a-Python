@@ -1,3 +1,4 @@
+from sklearn.preprocessing import StandardScaler
 import numpy as np
 from classification import features
 import keras
@@ -81,12 +82,14 @@ if __name__ == '__main__':
     # get data
     # cluster
     transactions = get_test_data()
-    # print(len(transactions))
-    # [print(features.create_cluster_features(t)) for t in transactions]
     X_train = np.array([features.create_cluster_features([t]) for t in transactions])
+
     Y_train = np.zeros((13,1))
     Y_train[0:5] = 1
     Y_train = np.hstack((Y_train, 1 - Y_train))
+
+    X_train =  StandardScaler().fit_transform(X_train)
+    # print(X_train)
 
     model = train(X_train, Y_train)
 
