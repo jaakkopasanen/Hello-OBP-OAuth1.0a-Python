@@ -2,9 +2,10 @@ from sklearn.preprocessing import StandardScaler
 import numpy as np
 from classification import features
 import keras
-from keras.models import Sequential
+from keras.models import Sequential, model_from_json
 from keras.optimizers import SGD
 from keras.layers import Dense, Activation
+from datetime import datetime
 
 from ObpApi.api_credentials import *
 from ObpApi.ObpApi import ObpApi
@@ -41,6 +42,23 @@ def get_test_data():
     return transactions
 
 
+def save_model(_model):
+    json_string = _model.to_json()
+    date_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    open('model_architecture.json', 'w').write(
+        json_string)
+    _model.save_weights('model_weights.h5')
+
+
+def load_model(path_to_architecture, path_to_weights, optimizer):
+    _model = model_from_json(open(path_to_architecture).read())
+    _model.load_weights(path_to_weights)
+    print("Compiling the neural network...")
+    _model.compile(loss='categorical_crossentropy',
+                  optimizer=optimizer)
+    return _model
+
+
 def train(X_train, Y_train):
     """Train model"""
 
@@ -61,18 +79,18 @@ def train(X_train, Y_train):
     # You can now iterate on your training data in batches:
     model.fit(X_train, Y_train, nb_epoch=1000, batch_size=17)
 
-    model.save("model.h5")
+    save_model(model)
 
 
 def test(model, X_test, Y_test):
     """Test model """
     # Evaluate your performance in one line:
-    loss_and_metrics = model.evaluate(X_test, Y_test, batch_size=32)
+    loss_and_metrics = model.evaluate(X_test, Y_test, batch_size=17)
     print("Loss and metrics: {}".format(loss_and_metrics))
 
     # Or generate predictions on new data:
-    classes = model.predict_classes(X_test, batch_size=32)
-    proba = model.predict_proba(X_test, batch_size=32)
+    classes = model.predict_classes(X_test, batch_size=17)
+    proba = model.predict_proba(X_test, batch_size=17)
 
     return classes, proba
 

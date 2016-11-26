@@ -8,10 +8,12 @@ import numpy as np
 import pandas as pd
 
 
-def get_training_data(path_to_user_data):
-    tm = TransactionManager()
-    tm.load(path_to_user_data)
-    user_transactions = tm.accounts['1']
+def get_training_data(path_to_user_data=None, user_transactions=None):
+    if path_to_user_data is not None:
+        tm = TransactionManager()
+        tm.load(path_to_user_data)
+        user_transactions = tm.accounts['1']
+
     clusters, cluster_labels, factorized_vals = cluster_transactions(user_transactions)
     # Save first cluster to file
     # clusters[0].to_csv('cluster.csv', index=False)
@@ -51,7 +53,7 @@ def get_training_data(path_to_user_data):
 
 
 if __name__ == '__main__':
-    path_to_user_data = os.path.join(os.path.dirname(
+    p = os.path.join(os.path.dirname(
         os.path.realpath(__file__)), 'datasimulation/tm.json')
-    x_train, y_train = get_training_data(path_to_user_data)
+    x_train, y_train = get_training_data(p)
     train(x_train.as_matrix(), np.array(y_train))
