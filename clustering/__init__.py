@@ -76,8 +76,8 @@ def user_transactions_to_data_matrix(user_transactions):
             'counterparty_id': transaction['counterparty']['id'],
             'weekday': get_transaction_weekday(transaction),
             'hour': get_transaction_hour(transaction),
-            'month': get_transaction_month(transaction),
-            'type': str(transaction['details']['type'])
+            # 'month': get_transaction_month(transaction),
+            # 'type': str(transaction['details']['type'])
         }, index=[transaction['account']['id']])
         df_all = df_all.append([row_transaction], ignore_index=False)
     return df_all
@@ -112,7 +112,7 @@ def factorize_string_cols(df):
             # Skip non string columns
             continue
         labels, uniques = pd.factorize(df[col])
-        factorized_vals[col] = OrderedDict(zip(labels, uniques))
+        factorized_vals[col] = OrderedDict(zip(range(uniques.size), uniques))
         df[col] = labels
     return df, factorized_vals
 
@@ -184,16 +184,32 @@ def cluster_transactions(user_transactions):
     # Cluster
     dbscan = DBSCAN()
     dbscan.fit(data_matrix_scaled)
-    y_pred = dbscan.labels_.astype(np.int)
+    # Predicted clusters is as long as rows (transactions) in data_matrix
+    predicted_clusters = dbscan.labels_.astype(np.int)
 
-    if all(y_pred == -1):
+    if all(predicted_clusters == -1):
         # Noisy samples are given the label -1
         print("%s: All samples are labeled as noisy samples" % account_id)
+        return None, None
     else:
         print("%s: Clustering successful - found %s clusters" %
-              (account_id, len(np.unique(y_pred))))
-        visualize_pca(data_matrix, labels=y_pred,
-                      file_name_identifier=account_id)
+              (account_id, len(np.unique(predicted_clusters))))
+        # visualize_pca(data_matrix, labels=y_pred,
+        #               file_name_identifier=account_id)
+        clusters = []
+        # Extract individual clusters (subsets of rows in data_frame)
+        for uniq_cluster_label in np.unique(predicted_clusters):
+            print("  * Number of transactions in cluster %s: %s" % (
+                uniq_cluster_label, len([ix for ix, label in
+                                 enumerate(predicted_clusters) if
+                                 label == uniq_cluster_label and
+                                 label != -1])))
+            cluster = data_matrix.iloc[
+                [i for i, label in enumerate(predicted_clusters) if
+                 label == uniq_cluster_label and label != -1]]
+            #cluster.to_csv('cluster%s.csv' % uniq_cluster_label)
+            clusters.append(cluster)
+        return clusters, factorized_vals
 
 
 if __name__ == '__main__':
@@ -211,4 +227,4 @@ if __name__ == '__main__':
     tm = TransactionManager()
     tm.load('/Users/tuomastikkanen/Documents/my_dev/Ultrahack16-UltimateAI/tm.json')
     user_transactions = tm.accounts['1']
-    cluster_transactions(user_transactions=user_transactions)
+    clusters, factorized_vals = cluster_transactions(user_transactions)
