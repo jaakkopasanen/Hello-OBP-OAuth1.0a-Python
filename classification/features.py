@@ -68,21 +68,37 @@ def create_cluster_features(transactions):
     feats.append(weekdays_ratio)
     feats.append(weekends_ratio)
 
+    n_descriptions = {}
+    for transaction in transactions:
+        if transaction['details']['description'] in n_descriptions:
+            n_descriptions[transaction['details']['description']] += 1
+        else:
+            n_descriptions[transaction['details']['description']] = 1
+    max_descr = None  # Description with most transactions
+    for key, count in n_descriptions.items():
+        if max_descr == None or count > n_descriptions[max_descr]:
+            max_descr = key
+    feats.append(max_descr)
+
     # new balances
-    new_balances = np.array([float(t['details']['new_balance']['amount']) for t in transactions])
-    new_balances_mean = new_balances.mean()
-    new_balances_std = new_balances.std()
-    feats.append(new_balances_mean)
-    feats.append(new_balances_std)
+    # new_balances = np.array([float(t['details']['new_balance']['amount']) for t in transactions])
+    # new_balances_mean = new_balances.mean()
+    # new_balances_std = new_balances.std()
+    # feats.append(new_balances_mean)
+    # feats.append(new_balances_std)
 
     # relative amounts
-    relative_amounts = values / new_balances
-    relative_amounts_average = relative_amounts.mean()
-    relative_amounts_std = relative_amounts.std()
-    feats.append(relative_amounts_average)
-    feats.append(relative_amounts_std)
+    # relative_amounts = values / new_balances
+    # relative_amounts_average = relative_amounts.mean()
+    # relative_amounts_std = relative_amounts.std()
+    # feats.append(relative_amounts_average)
+    # feats.append(relative_amounts_std)
 
-    return np.array(feats)
+    feats_names = ['amount_mean', 'amount_std', 'hours_mean', 'hours_std',
+                   'month_mean', 'month_std', 'day_mean', 'day_std',
+                   'weekdays_ratio', 'weekends_ratio']
+
+    return np.array(feats), feats_names
 
 if __name__ == '__main__':
     from pprint import pprint

@@ -190,7 +190,7 @@ def cluster_transactions(user_transactions):
     if all(predicted_clusters == -1):
         # Noisy samples are given the label -1
         print("%s: All samples are labeled as noisy samples" % account_id)
-        return None, None
+        return None, None, None
     else:
         print("%s: Clustering successful - found %s clusters" %
               (account_id, len(
@@ -213,7 +213,7 @@ def cluster_transactions(user_transactions):
                  label == uniq_cluster_label]]
             #cluster.to_csv('cluster%s.csv' % uniq_cluster_label)
             clusters.append(cluster)
-        return clusters, factorized_vals
+        return clusters, predicted_clusters, factorized_vals
 
 
 if __name__ == '__main__':
