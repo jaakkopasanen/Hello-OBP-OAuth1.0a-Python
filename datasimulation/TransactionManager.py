@@ -35,8 +35,8 @@ class TransactionManager:
         transaction = {
             'details': details,
             'id': 'ea3c6ee0-0147-48c9-b6e2-{}'.format(str(self.n_transactions).zfill(11)),
-            'this_account': str(this_account_id),
-            'other_account': str(other_account_id)
+            'account': {'id': str(this_account_id)},
+            'counterparty': {'id': str(other_account_id)}
         }
         if this_account_id in self.accounts:
             self.accounts[this_account_id].append(transaction)
