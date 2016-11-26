@@ -2,19 +2,26 @@ import numpy as np
 import dateutil.parser
 
 def get_transaction_weekday(transaction):
-    date_string = transaction['details']['completed']
+    date_string = transaction['details']['posted']
     return dateutil.parser.parse(date_string).weekday()
+
+def get_transaction_month(transaction):
+    date_string = transaction['details']['posted']
+    return dateutil.parser.parse(date_string).month
+
+def get_transaction_hour(transaction):
+    date_string = transaction['details']['posted']
+    return dateutil.parser.parse(date_string).hour
 
 
 def create_cluster_features(transactions):
     feats = []
     # mean and std of transaction amount
 
-    print([t['details']['value']['amount'] for t in transactions])
-
-    mean = np.array([t['details']['value']['amount'] for t in transactions]).mean()
+    values = np.array([float(t['details']['value']['amount']) for t in transactions])
+    mean = values.mean()
+    std = values.std()
     feats.append(mean)
-    std = np.array([t['details']['value']['amount'] for t in transactions]).std()
     feats.append(std)
 
     # percentage of weekdays and weekend days
@@ -25,6 +32,8 @@ def create_cluster_features(transactions):
     weekdays_ratio = weekdays.sum() / weekdays.shape[0]
     print(weekdays_ratio)
     print(weekends_ratio)
+
+    return np.array(feats)
 
 if __name__ == '__main__':
     from pprint import pprint
