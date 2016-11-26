@@ -67,28 +67,35 @@ def create_transactions(params):
     start_time = datetime.datetime.strptime(params['start_time'], '%Y-%m-%dT%H:%M:%SZ')
     end_time = datetime.datetime.strptime(params['end_time'], '%Y-%m-%dT%H:%M:%SZ')
     # Generate monthly transactions
+    static_spendings = 0
     for mt in params['monthly_transactions']:  # Create all monthly transactions
         t_parts = mt['time'].split(':')  # Split time
         t = start_time.replace(day=mt['day'], hour=int(t_parts[0]), minute=int(t_parts[1]))  # Set time
         create_monthly_transactions(t, end_time, description=mt['description'], transaction_type='2',
                                     amount=mt['amount'], this_account_id=params['this_account'],
                                     other_account_id=mt['other_account'])
+        static_spendings += mt['amount']
+    print('Static spendings are {} €'.format(static_spendings))
 
     # Generate daily transactions
     d = start_time
     day_spending = 0
     month_spending = 0
     while d < end_time:
+
+        # print('Spent {} € yesterday'.format(day_spending))
         day_spending = 0  # Reset day spending
         if d.day == 1:
-            print('Spent {} € last month'.format(month_spending))
+            print('Spent {} € last month'.format(month_spending + static_spendings))
             month_spending = 0  # Reset month spending at the beginning of month
+
         for dt in params['daily_transactions']:  # Create all daily transactions
             t_parts = dt['time'].split(':')  # Split time
             amount = create_daily_transaction(dt['prob'], d, int(t_parts[0]), int(t_parts[1]), dt['hour_spread'],
                                               dt['description'], dt['amount'], params['this_account'],
                                               random.choice(dt['other_accounts']))
             day_spending += amount  # Increase day spending
+
         # next day
         month_spending += day_spending  # Add day spending total to month spending
         d = d + relativedelta(days=1)  # Next day
