@@ -49,7 +49,7 @@ def get_training_data(path_to_user_data=None, user_transactions=None):
         label_ix = np.where(np.array(unique_labels) == label)[0][0]
         y_train.append(one_hot_y[label_ix, :])
 
-    return cluster_matrix, y_train
+    return cluster_matrix, y_train, unique_labels
 
 
 if __name__ == '__main__':
