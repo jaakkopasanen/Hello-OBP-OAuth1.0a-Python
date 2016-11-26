@@ -8,7 +8,16 @@
     {"description": "salary", "day": 15, "time": "10:00", "amount": 2000, "other_account": "21"},
     {"description": "rent", "day": 2, "time": "18:14", "amount": -500, "other_account": "22"},
     {"description": "public transportation", "day": 8, "time": "12:05", "amount": -29.9, "other_account": "23"},
-    {"description": "internet", "day": 27, "time": "20:01", "amount": -15, "other_account": "24"}
+    {"description": "internet", "day": 27, "time": "20:01", "amount": -15, "other_account": "45"},
+    {"description": "subscriptions", "day": 3, "time": "00:00", "amount": -9.9, "other_account": "46"},
+    {"description": "subscriptions", "day": 8, "time": "00:00", "amount": -9.9, "other_account": "47"},
+    {"description": "subscriptions", "day": 12, "time": "00:00", "amount": -14.9, "other_account": "48"},
+    {"description": "subscriptions", "day": 21, "time": "00:00", "amount": -24.9, "other_account": "49"},
+    {"description": "subscriptions", "day": 16, "time": "00:00", "amount": -29.9, "other_account": "50"},
+    {"description": "cleaning", "day": 2, "time": "00:00", "amount": -60, "other_account": "50"},
+    {"description": "cleaning", "day": 9, "time": "00:00", "amount": -60, "other_account": "50"},
+    {"description": "cleaning", "day": 16, "time": "00:00", "amount": -60, "other_account": "50"},
+    {"description": "cleaning", "day": 23, "time": "00:00", "amount": -60, "other_account": "50"}
   ],
   "daily_transactions": [
     {"description": "breakfast", "amount": -5, "prob": 0.2, "time": "09:00", "hour_spread": 0.2, "other_accounts": ["25", "26"]},

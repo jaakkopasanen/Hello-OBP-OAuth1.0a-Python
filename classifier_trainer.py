@@ -55,5 +55,5 @@ def get_training_data(path_to_user_data=None, user_transactions=None):
 if __name__ == '__main__':
     p = os.path.join(os.path.dirname(
         os.path.realpath(__file__)), 'datasimulation/tm.json')
-    x_train, y_train = get_training_data('./datasimulation/tm.json')
+    x_train, y_train, _ = get_training_data('./datasimulation/tm.json')
     train(x_train.as_matrix(), np.array(y_train))

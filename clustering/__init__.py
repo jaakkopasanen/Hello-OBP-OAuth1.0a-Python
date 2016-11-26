@@ -1,5 +1,6 @@
 import os
 import json
+import pickle
 from pprint import pprint
 from collections import OrderedDict
 
@@ -18,7 +19,9 @@ from classification.features import (
     get_transaction_weekday, get_transaction_hour, get_transaction_month)
 from datasimulation.TransactionManager import TransactionManager
 
+
 DEFAULT_VAL_TO_REPLACE_MISSING = -9999.0
+PIK = 'cluster_amount_sums.pkl'
 
 
 def get_api():
@@ -173,10 +176,21 @@ def visualize_pca(df, labels=None, file_name_identifier=None):
         plt.close("all")
 
 
+def save_cluster_amount_sums(clusters_orig, predicted_clusters):
+    with open(PIK, "wb") as f:
+        pickle.dump([clusters_orig, predicted_clusters], f)
+
+
+def load_cluster_amount_sums():
+    with open(PIK, "rb") as f:
+        clusters_orig, predicted_clusters = pickle.load(f)
+        return clusters_orig, predicted_clusters
+
+
 def cluster_transactions(user_transactions):
     # Prepare data
-    data_matrix = user_transactions_to_data_matrix(user_transactions)
-    data_matrix, factorized_vals = factorize_string_cols(data_matrix)
+    data_matrix_orig = user_transactions_to_data_matrix(user_transactions)
+    data_matrix, factorized_vals = factorize_string_cols(data_matrix_orig)
     data_matrix = pre_process(data_matrix)
     account_id = data_matrix.index[0]
     # Normalize dataset for easier parameter selection
@@ -199,6 +213,7 @@ def cluster_transactions(user_transactions):
         # visualize_pca(data_matrix, labels=y_pred,
         #               file_name_identifier=account_id)
         clusters = []
+        clusters_orig = []
         # Extract individual clusters (subsets of rows in data_frame)
         for uniq_cluster_label in np.unique(predicted_clusters):
             if uniq_cluster_label == -1:
@@ -211,8 +226,13 @@ def cluster_transactions(user_transactions):
             cluster = data_matrix.iloc[
                 [i for i, label in enumerate(predicted_clusters) if
                  label == uniq_cluster_label]]
+            cluster_orig = data_matrix_orig.iloc[
+                [i for i, label in enumerate(predicted_clusters) if
+                 label == uniq_cluster_label]]
             #cluster.to_csv('cluster%s.csv' % uniq_cluster_label)
             clusters.append(cluster)
+            clusters_orig.append(cluster_orig)
+        save_cluster_amount_sums(clusters_orig, predicted_clusters)
         return clusters, predicted_clusters, factorized_vals
 
 

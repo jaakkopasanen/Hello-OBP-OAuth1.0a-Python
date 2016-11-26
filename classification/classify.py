@@ -62,8 +62,6 @@ def load_model(path_to_architecture, path_to_weights, optimizer):
 def train(X_train, Y_train):
     """Train model"""
 
-    print(X_train.shape)
-    print(Y_train.shape)
     model = Sequential()
     # Stacking layers is as easy as .add():
 
