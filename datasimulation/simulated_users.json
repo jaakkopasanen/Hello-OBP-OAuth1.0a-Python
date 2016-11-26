@@ -1,0 +1,16 @@
+[{
+  "name": "Student",
+  "start_time": "2015-11-01T16:55:00Z",
+  "end_time": "2016-11-02T16:55:00Z",
+  "this_account": "1",
+  "monthly_transactions": [
+    {"description": "salary", "day": 15, "time": "10:00", "amount": 2000, "other_account": "21"},
+    {"description": "rent", "day": 2, "time": "18:14", "amount": -500, "other_account": "22"},
+    {"description": "public transportation", "day": 8, "time": "12:05", "amount": -29.9, "other_account": "23"},
+    {"description": "internet", "day": 27, "time": "20:01", "amount": -15, "other_account": "24"}
+  ],
+  "daily_transactions": [
+    {"description": "breakfast", "prob": 0.1, "time": "09:00", "hour_spread": 0.2, "other_accounts": ["25", "26"]},
+    {"description": "lunch", "prob": 0.8, "time": "11:20", "hour_spread": 0.2, "other_accounts": ["27", "28", "29"]}
+  ]
+}]

@@ -6,6 +6,7 @@ import datetime
 from TransactionManager import TransactionManager
 from datetime_utils import time_spread
 import random
+import json
 
 enable_debugging = True
 
@@ -62,19 +63,22 @@ def create_daily_transaction(prob, day, hour, minute, hour_spread, description, 
 
 
 def create_transactions(params):
+    # Parse start time and end time
+    start_time = datetime.datetime.strptime(params['start_time'], '%Y-%m-%dT%H:%M:%SZ')
+    end_time = datetime.datetime.strptime(params['end_time'], '%Y-%m-%dT%H:%M:%SZ')
     # Generate monthly transactions
     for mt in params['monthly_transactions']:  # Create all monthly transactions
         t_parts = mt['time'].split(':')  # Split time
-        t = params['start_time'].replace(day=mt['day'], hour=int(t_parts[0]), minute=int(t_parts[1]))  # Set time
-        create_monthly_transactions(t, params['end_time'], description=mt['description'], transaction_type='2',
+        t = start_time.replace(day=mt['day'], hour=int(t_parts[0]), minute=int(t_parts[1]))  # Set time
+        create_monthly_transactions(t, end_time, description=mt['description'], transaction_type='2',
                                     amount=mt['amount'], this_account_id=params['this_account'],
                                     other_account_id=mt['other_account'])
 
     # Generate daily transactions
-    d = params['start_time']
+    d = start_time
     day_spending = 0
     month_spending = 0
-    while d < params['end_time']:
+    while d < end_time:
         day_spending = 0  # Reset day spending
         if d.day == 1:
             month_spending = 0  # Reset month spending at the beginning of month
@@ -91,21 +95,8 @@ def create_transactions(params):
 
 if __name__ == '__main__':
 
-    users = [{
-        'start_time': datetime.datetime(2015, 11, 1, 16, 55, 0),
-        'end_time': datetime.datetime(2015, 11, 1, 16, 55, 0) + relativedelta(years=1, days=1),
-        'this_account': '1',
-        'monthly_transactions': [
-            {'description': 'salary', 'day': 15, 'time': '10:00', 'amount': 2000, 'other_account': '21'},
-            {'description': 'rent', 'day': 2, 'time': '18:14', 'amount': -500, 'other_account': '22'},
-            {'description': 'public transportation', 'day': 8, 'time': '12:05', 'amount': -29.9, 'other_account': '23'},
-            {'description': 'internet', 'day': 27, 'time': '20:01', 'amount': -15, 'other_account': '24'},
-        ],
-        'daily_transactions': [
-            {'description': 'breakfast', 'prob': 0.1, 'time': '09:00', 'hour_spread': 0.2, 'other_accounts': ['25', '26']},
-            {'description': 'lunch', 'prob': 0.8, 'time': '11:20', 'hour_spread': 0.2, 'other_accounts': ['27', '28', '29']}
-        ]
-    }]
+    with open('./simulated_users.json') as f:
+        users = json.loads(f.read())
 
     for user in users:
         create_transactions(user)
