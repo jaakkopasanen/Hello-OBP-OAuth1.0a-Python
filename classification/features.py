@@ -13,6 +13,14 @@ def get_transaction_hour(transaction):
     date_string = transaction['details']['posted']
     return dateutil.parser.parse(date_string).hour
 
+def get_transaction_balance(transaction):
+    return transaction['details']['new_balance']['amount']
+
+def get_is_transaction_weekend(transaction):
+    day_of_week = get_transaction_weekday(transaction)
+    return day_of_week > 4
+
+
 
 def create_cluster_features(transactions):
 
@@ -59,6 +67,20 @@ def create_cluster_features(transactions):
     weekdays_ratio = weekdays.sum() / weekdays.shape[0]
     feats.append(weekdays_ratio)
     feats.append(weekends_ratio)
+
+    # new balances
+    new_balances = np.array([float(t['details']['new_balance']['amount']) for t in transactions])
+    new_balances_mean = new_balances.mean()
+    new_balances_std = new_balances.std()
+    feats.append(new_balances_mean)
+    feats.append(new_balances_std)
+
+    # relative amounts
+    relative_amounts = values / new_balances
+    relative_amounts_average = relative_amounts.mean()
+    relative_amounts_std = relative_amounts.std()
+    feats.append(relative_amounts_average)
+    feats.append(relative_amounts_std)
 
     return np.array(feats)
 
