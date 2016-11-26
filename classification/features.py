@@ -2,29 +2,65 @@ import numpy as np
 import dateutil.parser
 
 def get_transaction_weekday(transaction):
-    date_string = transaction['details']['completed']
+    date_string = transaction['details']['posted']
     return dateutil.parser.parse(date_string).weekday()
+
+def get_transaction_month(transaction):
+    date_string = transaction['details']['posted']
+    return dateutil.parser.parse(date_string).month
+
+def get_transaction_hour(transaction):
+    date_string = transaction['details']['posted']
+    return dateutil.parser.parse(date_string).hour
 
 
 def create_cluster_features(transactions):
+
+    """
+    Compute cluster features
+    amount mean, amount std, hour average, hour std, month average,
+    month std, day average, day std, percentage of weekdays,
+    percentage of weekends
+    """
+
     feats = []
-    # mean and std of transaction amount
-
-    print([t['details']['value']['amount'] for t in transactions])
-
-    mean = np.array([t['details']['value']['amount'] for t in transactions]).mean()
+    # amount statistics
+    values = np.array([float(t['details']['value']['amount']) for t in transactions])
+    mean = values.mean()
+    std = values.std()
     feats.append(mean)
-    std = np.array([t['details']['value']['amount'] for t in transactions]).std()
     feats.append(std)
 
+    # hour statistics
+    hour_data = np.array([get_transaction_hour(t) for t in transactions])
+    hour_average = hour_data.mean()
+    hour_std = hour_data.std()
+    feats.append(hour_average)
+    feats.append(hour_std)
+
+    # month statistics
+    month_data = np.array([get_transaction_month(t) for t in transactions])
+    month_average = month_data.mean()
+    month_std = month_data.std()
+    feats.append(month_average)
+    feats.append(month_std)
+
+    # day statistics
+    day_data = np.array([get_transaction_weekday(t) for t in transactions])
+    day_average = day_data.mean()
+    day_std = day_data.std()
+    feats.append(day_average)
+    feats.append(day_std)
+
     # percentage of weekdays and weekend days
-    days = [get_transaction_weekday(t) for t in transactions]
-    weekends = np.array(days) > 4
-    weekdays = np.array(days) <= 4
+    weekends = day_data > 4
+    weekdays = day_data <= 4
     weekends_ratio = weekends.sum() / weekends.shape[0]
     weekdays_ratio = weekdays.sum() / weekdays.shape[0]
-    print(weekdays_ratio)
-    print(weekends_ratio)
+    feats.append(weekdays_ratio)
+    feats.append(weekends_ratio)
+
+    return np.array(feats)
 
 if __name__ == '__main__':
     from pprint import pprint
@@ -57,4 +93,5 @@ if __name__ == '__main__':
     transactions = obp_api.get_transactions(accounts[0]['bank_id'],
                                             accounts[0]['id'], view='owner')
     print(transactions)
-    create_cluster_features(transactions)
+    feats = create_cluster_features(transactions)
+    print(feats)
