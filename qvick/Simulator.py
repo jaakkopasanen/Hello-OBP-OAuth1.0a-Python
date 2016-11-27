@@ -5,7 +5,7 @@ class Simulator:
     def __init__(self, main, f1, f2):
         self.pos = (0, 19)
         self.dir = 1  # 0=North, 1=East, 2=South, 3=West
-        self.n_commands = 0
+        self.steps = 0
         self.debug = False
         self.f1 = f1
         self.f2 = f2
@@ -14,7 +14,7 @@ class Simulator:
 
     def _print_position(self):
         if self.debug:
-            print('({p1}, {p2})'.format(p1=self.pos[0], p2=self.pos[1]))
+            print('{s}: ({p1}, {p2})'.format(s=self.steps, p1=self.pos[0], p2=self.pos[1]))
 
     def _move(self, l):
         """Move
@@ -34,13 +34,13 @@ class Simulator:
         # Next step is inside the map and is not a wall -> move to next step
         if 0 <= self.pos[0] < 20 and 0 <= self.pos[1] < 20 and self._map[next_pos[1]][next_pos[0]]:
             self.pos = next_pos
+        self.steps += 1
         self._print_position()
-        self.n_commands += 1
 
         if self.pos == (19, 0):
             # Goal reached
             print('Success with configuration')
-            print(self.n_commands)
+            print(self.steps)
             print(self.main)
             print(self.f1)
             print(self.f2)
@@ -63,7 +63,7 @@ class Simulator:
             self.dir = 3
 
     def _run_command(self, command_name):
-        if self.n_commands > 1000:
+        if self.steps > 1000:
             if self.debug:
                 print('Max steps exceeded')
             raise ValueError(-1)
