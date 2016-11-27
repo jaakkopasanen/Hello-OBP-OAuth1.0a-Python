@@ -64,7 +64,8 @@ class Simulator:
 
     def _run_command(self, command_name):
         if self.n_commands > 1000:
-            print('Max steps exceeded')
+            if self.debug:
+                print('Max steps exceeded')
             raise ValueError(-1)
 
         if command_name == 'forward':
@@ -86,7 +87,8 @@ class Simulator:
         self._print_position()
         for com in self.main:
             self._run_command(com)
-        print('Did not reach goal')
+        if self.debug:
+            print('Did not reach goal')
         raise ValueError(0)
 
 if __name__ == '__main__':
