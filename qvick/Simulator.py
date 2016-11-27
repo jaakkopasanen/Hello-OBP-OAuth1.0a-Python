@@ -1,3 +1,5 @@
+import os
+import sys
 import numpy as np
 
 
@@ -10,7 +12,9 @@ class Simulator:
         self.f1 = f1
         self.f2 = f2
         self.main = main
-        self._map = np.load('./qvik_array.npy')[:, :, 0]
+        self._map = np.load(os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            'qvik_array.npy'))[:, :, 0]
 
     def _print_position(self):
         if self.debug:
@@ -44,7 +48,7 @@ class Simulator:
             print(self.main)
             print(self.f1)
             print(self.f2)
-            raise ValueError(1)
+            sys.exit()
 
     def forward(self):
         self._move(1)
@@ -64,8 +68,7 @@ class Simulator:
 
     def _run_command(self, command_name):
         if self.steps > 1000:
-            if self.debug:
-                print('Max steps exceeded')
+            print('Max steps exceeded')
             raise ValueError(-1)
 
         if command_name == 'forward':
@@ -87,15 +90,32 @@ class Simulator:
         self._print_position()
         for com in self.main:
             self._run_command(com)
-        if self.debug:
-            print('Did not reach goal')
+        print('Did not reach goal')
         raise ValueError(0)
 
 if __name__ == '__main__':
-    s = Simulator(
-        ['f1'],
-        ['forward', 'f2'],
-        ['left', 'forward']
-    )
-    s.debug = True
-    s.run()
+    # Generate data
+    import random
+    from itertools import permutations
+    a = ['forward', 'backward', 'left', 'right', 'f1', 'f2']
+    perm = list(permutations(a, len(a)))
+    # permm = list(permutations(range(3), 3))
+    possibilities = []
+    for p in perm:
+        for i in range(10):
+            possibilities.append({
+                'main': ['f1'],
+                'f1': [p[i] for i in sorted(random.sample(range(len(p)), 3))],
+                'f2': [p[i] for i in sorted(random.sample(range(len(p)), 3))]})
+
+    for possiblity in possibilities:
+        s = Simulator(
+            main=possiblity['main'],
+            f1=possiblity['f1'],
+            f2=possiblity['f2'])
+        # s.debug = True
+
+        try:
+            s.run()
+        except Exception:
+            pass
